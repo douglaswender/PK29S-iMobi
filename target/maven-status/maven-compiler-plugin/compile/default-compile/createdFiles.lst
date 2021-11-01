@@ -1,5 +1,9 @@
-br\com\imobi\view\Login.class
-br\com\imobi\view\Login$3.class
-br\com\imobi\view\Login$1.class
-br\com\imobi\view\Login$2.class
+br\com\imobi\view\HomeJFrame$2.class
+br\com\imobi\view\HomeJFrame$1.class
+br\com\imobi\view\HomeJFrame.class
+br\com\imobi\view\LoginJDialog$1.class
 br\com\imobi\app\Main.class
+br\com\imobi\view\LoginJDialog$3.class
+br\com\imobi\view\HomeJFrame$3.class
+br\com\imobi\view\LoginJDialog.class
+br\com\imobi\view\LoginJDialog$2.class
