@@ -5,6 +5,10 @@
  */
 package br.com.imobi.view;
 
+import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 
 /**
@@ -13,12 +17,18 @@ import javax.swing.JFrame;
  */
 public class HomeJFrame extends javax.swing.JFrame {
 
+    private final ImoveisJFrame janelaImoveis = new ImoveisJFrame();
+    private final FavoritosJFrame janelaFavoritos = new FavoritosJFrame();
+    private final MensagensJFrame janelaMensagens = new MensagensJFrame();
+    private final NotificacoesJFrame janelaNotificacoes = new NotificacoesJFrame();
+
     /**
      * Creates new form Home
      */
     public HomeJFrame() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        
     }
 
     /**
@@ -34,12 +44,12 @@ public class HomeJFrame extends javax.swing.JFrame {
         btnNotificacoes = new javax.swing.JButton();
         btnMensagens = new javax.swing.JButton();
         btnFavoritos = new javax.swing.JButton();
-        btnDocumentos = new javax.swing.JButton();
+        btnImoveis = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
-        pnlMain = new javax.swing.JPanel();
         btnVoltar = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
+        dskMain = new javax.swing.JDesktopPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
@@ -48,6 +58,11 @@ public class HomeJFrame extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\dglsw\\Documents\\NetBeansProjects\\iMobi\\src\\main\\java\\br\\com\\imobi\\assets\\code_icon.png")); // NOI18N
 
         btnNotificacoes.setText("Notificações");
+        btnNotificacoes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNotificacoesActionPerformed(evt);
+            }
+        });
 
         btnMensagens.setText("Mensagens");
         btnMensagens.addActionListener(new java.awt.event.ActionListener() {
@@ -57,8 +72,18 @@ public class HomeJFrame extends javax.swing.JFrame {
         });
 
         btnFavoritos.setText("Favoritos");
+        btnFavoritos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFavoritosActionPerformed(evt);
+            }
+        });
 
-        btnDocumentos.setText("Documentos");
+        btnImoveis.setText("Imóveis");
+        btnImoveis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImoveisActionPerformed(evt);
+            }
+        });
 
         btnClientes.setText("Clientes");
         btnClientes.addActionListener(new java.awt.event.ActionListener() {
@@ -67,22 +92,32 @@ public class HomeJFrame extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout pnlMainLayout = new javax.swing.GroupLayout(pnlMain);
-        pnlMain.setLayout(pnlMainLayout);
-        pnlMainLayout.setHorizontalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 826, Short.MAX_VALUE)
-        );
-        pnlMainLayout.setVerticalGroup(
-            pnlMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 432, Short.MAX_VALUE)
-        );
-
         btnVoltar.setText("Voltar");
 
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout dskMainLayout = new javax.swing.GroupLayout(dskMain);
+        dskMain.setLayout(dskMainLayout);
+        dskMainLayout.setHorizontalGroup(
+            dskMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        dskMainLayout.setVerticalGroup(
+            dskMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,55 +129,58 @@ public class HomeJFrame extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(49, 49, 49)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(btnNotificacoes)
-                            .addComponent(btnDocumentos, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnMensagens, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnFavoritos, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnClientes, javax.swing.GroupLayout.Alignment.LEADING))))
+                            .addComponent(btnMensagens)
+                            .addComponent(btnFavoritos)
+                            .addComponent(btnImoveis)
+                            .addComponent(btnClientes))))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(18, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(123, 123, 123)
                         .addComponent(btnVoltar)
-                        .addGap(176, 176, 176)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 874, Short.MAX_VALUE)
                         .addComponent(btnSalvar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExcluir)
-                        .addGap(125, 125, 125))))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(32, 32, 32)
-                .addComponent(btnNotificacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnMensagens, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(btnFavoritos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(btnDocumentos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(btnClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addGap(166, 166, 166))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVoltar)
-                    .addComponent(btnSalvar)
-                    .addComponent(btnExcluir))
-                .addGap(18, 18, 18)
-                .addComponent(pnlMain, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                        .addGap(101, 101, 101))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(dskMain)
+                        .addContainerGap())))
         );
 
-        setSize(new java.awt.Dimension(1029, 545));
+        layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {btnClientes, btnFavoritos, btnImoveis, btnMensagens, btnNotificacoes});
+
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnExcluir)
+                            .addComponent(btnSalvar)
+                            .addComponent(btnVoltar))
+                        .addGap(27, 27, 27)
+                        .addComponent(dskMain))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1)
+                        .addGap(79, 79, 79)
+                        .addComponent(btnNotificacoes, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                        .addGap(43, 43, 43)
+                        .addComponent(btnMensagens, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                        .addGap(50, 50, 50)
+                        .addComponent(btnFavoritos, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                        .addGap(40, 40, 40)
+                        .addComponent(btnImoveis, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+                        .addGap(31, 31, 31)
+                        .addComponent(btnClientes, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)))
+                .addGap(20, 20, 20))
+        );
+
+        setSize(new java.awt.Dimension(1359, 653));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -152,7 +190,60 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnMensagensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensagensActionPerformed
         // TODO add your handling code here:
+
+        janelaMensagens.setVisible(true);
+        try {
+            janelaMensagens.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dskMain.add(janelaMensagens);
     }//GEN-LAST:event_btnMensagensActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnNotificacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacoesActionPerformed
+        // TODO add your handling code here:
+        
+        janelaNotificacoes.setVisible(true);
+        try {
+            janelaNotificacoes.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dskMain.add(janelaNotificacoes);
+
+    }//GEN-LAST:event_btnNotificacoesActionPerformed
+
+    private void btnFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFavoritosActionPerformed
+        // TODO add your handling code here:
+        janelaFavoritos.setVisible(true);
+        try {
+            janelaFavoritos.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dskMain.add(janelaFavoritos);
+    }//GEN-LAST:event_btnFavoritosActionPerformed
+
+    private void btnImoveisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImoveisActionPerformed
+        // TODO add your handling code here:
+
+        janelaImoveis.setVisible(true);
+        try {
+            janelaImoveis.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        dskMain.add(janelaImoveis);
+    }//GEN-LAST:event_btnImoveisActionPerformed
 
     /**
      * @param args the command line arguments
@@ -192,14 +283,15 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClientes;
-    private javax.swing.JButton btnDocumentos;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFavoritos;
+    private javax.swing.JButton btnImoveis;
     private javax.swing.JButton btnMensagens;
     private javax.swing.JButton btnNotificacoes;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JButton btnVoltar;
+    private javax.swing.JDesktopPane dskMain;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel pnlMain;
     // End of variables declaration//GEN-END:variables
+
 }
