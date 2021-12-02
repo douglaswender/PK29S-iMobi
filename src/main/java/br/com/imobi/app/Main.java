@@ -49,7 +49,6 @@ public class Main {
 
         try {
             uLogado = query.getSingleResult();
-            closeConn();
             return true;
         } catch (NoResultException e) {
             uLogado = null;

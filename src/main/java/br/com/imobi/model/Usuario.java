@@ -82,7 +82,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id=" + id + ", name=" + name + ", login=" + login + ", password=" + password + ", admin=" + isAdmin + '}';
+        return name + "(@" + login + ")";
     }
     
     

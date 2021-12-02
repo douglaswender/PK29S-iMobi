@@ -5,11 +5,13 @@
  */
 package br.com.imobi.view;
 
+import br.com.imobi.app.Main;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,13 +25,15 @@ public class HomeJFrame extends javax.swing.JFrame {
     private final NotificacoesJFrame janelaNotificacoes = new NotificacoesJFrame();
     private final ClientesJFrame janelaClientes = new ClientesJFrame();
 
+    private int selectedIndex = 0;
+
     /**
      * Creates new form Home
      */
     public HomeJFrame() {
         initComponents();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
+
     }
 
     /**
@@ -57,8 +61,18 @@ public class HomeJFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
         setExtendedState(6);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
-        btnVoltar.setText("Voltar");
+        btnVoltar.setText("Novo");
+        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVoltarActionPerformed(evt);
+            }
+        });
 
         btnSalvar.setText("Salvar");
         btnSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -163,7 +177,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnVoltar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 947, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 951, Short.MAX_VALUE)
                         .addComponent(btnSalvar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExcluir))
@@ -197,8 +211,9 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         // TODO add your handling code here:
+        selectedIndex = 4;
         janelaClientes.setVisible(true);
-        
+
         try {
             janelaClientes.setMaximum(true);
         } catch (PropertyVetoException ex) {
@@ -209,7 +224,7 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnMensagensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensagensActionPerformed
         // TODO add your handling code here:
-
+        selectedIndex = 1;
         janelaMensagens.setVisible(true);
         try {
             janelaMensagens.setMaximum(true);
@@ -230,7 +245,7 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnNotificacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacoesActionPerformed
         // TODO add your handling code here:
-        
+        selectedIndex = 0;
         janelaNotificacoes.setVisible(true);
         try {
             janelaNotificacoes.setMaximum(true);
@@ -243,6 +258,7 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFavoritosActionPerformed
         // TODO add your handling code here:
+        selectedIndex = 2;
         janelaFavoritos.setVisible(true);
         try {
             janelaFavoritos.setMaximum(true);
@@ -254,7 +270,7 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnImoveisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImoveisActionPerformed
         // TODO add your handling code here:
-
+        selectedIndex = 3;
         janelaImoveis.setVisible(true);
         try {
             janelaImoveis.setMaximum(true);
@@ -263,6 +279,41 @@ public class HomeJFrame extends javax.swing.JFrame {
         }
         dskMain.add(janelaImoveis);
     }//GEN-LAST:event_btnImoveisActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        // TODO add your handling code here:
+        switch (selectedIndex) {
+            case 0:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 1:
+                NovaMensagemJDialog dialog = new NovaMensagemJDialog(this, rootPaneCheckingEnabled);
+                dialog.setLocationRelativeTo(null);
+                dialog.setVisible(true);
+                break;
+            case 2:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 3:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 4:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
+
+        }
+    }//GEN-LAST:event_btnVoltarActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        // TODO add your handling code here:
+        try {
+            Main.closeConn();
+        } catch (Exception e) {
+
+        }
+    }//GEN-LAST:event_formWindowClosed
 
     /**
      * @param args the command line arguments
