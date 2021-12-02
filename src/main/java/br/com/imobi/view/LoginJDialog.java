@@ -5,6 +5,7 @@
  */
 package br.com.imobi.view;
 
+import br.com.imobi.app.Main;
 import javax.swing.JOptionPane;
 
 /**
@@ -37,6 +38,7 @@ public class LoginJDialog extends javax.swing.JFrame {
         lblImage = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         txtSenha = new javax.swing.JPasswordField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(223, 223, 223));
@@ -44,7 +46,6 @@ public class LoginJDialog extends javax.swing.JFrame {
         btnLogin.setBackground(new java.awt.Color(67, 87, 173));
         btnLogin.setFont(new java.awt.Font("Ubuntu", 0, 14)); // NOI18N
         btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setIcon(new javax.swing.ImageIcon("C:\\Users\\dglsw\\Documents\\NetBeansProjects\\iMobi\\src\\main\\java\\br\\com\\imobi\\assets\\trail.png")); // NOI18N
         btnLogin.setText("Login");
         btnLogin.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
@@ -63,11 +64,12 @@ public class LoginJDialog extends javax.swing.JFrame {
         lblSenha.setText("Senha");
 
         lblImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblImage.setIcon(new javax.swing.ImageIcon("C:\\Users\\dglsw\\Documents\\NetBeansProjects\\iMobi\\src\\main\\java\\br\\com\\imobi\\assets\\codesandbox.png")); // NOI18N
         lblImage.setToolTipText("");
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 0, 24)); // NOI18N
         jLabel1.setText("iMobi");
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/codesandbox.png"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -76,27 +78,34 @@ public class LoginJDialog extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(183, 183, 183)
+                        .addGap(66, 66, 66)
+                        .addComponent(lblImage)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(187, 187, 187)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblUsuario)
                             .addComponent(lblSenha)
                             .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(txtSenha, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(226, 226, 226)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addComponent(lblImage)))
-                .addContainerGap(98, Short.MAX_VALUE))
+                                .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(43, 43, 43)
+                                .addComponent(jLabel1)))))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 346, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addGap(30, 30, 30)
@@ -109,7 +118,7 @@ public class LoginJDialog extends javax.swing.JFrame {
                 .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnLogin)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -125,7 +134,7 @@ public class LoginJDialog extends javax.swing.JFrame {
         System.out.println(usuario);
         System.out.println(senha);
         
-        if("admin".equals(usuario) && "admin".equals(senha)){
+        if(Main.login(usuario, senha)){
             System.out.println("Ok");
             HomeJFrame home = new HomeJFrame();
             home.setVisible(true);
@@ -175,6 +184,7 @@ public class LoginJDialog extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblSenha;
     private javax.swing.JLabel lblUsuario;
