@@ -5,17 +5,73 @@
  */
 package br.com.imobi.view;
 
+import br.com.imobi.app.Main;
+import br.com.imobi.app.Util;
+import br.com.imobi.model.Imovel;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author dglsw
  */
 public class ImoveisJFrame extends javax.swing.JInternalFrame {
 
+    private final String[] columns = {"Código", "Imóvel", "Endereço", "Cliente", "Última atualização", "Favorito"};
+    private DefaultTableModel dtm;
+
     /**
      * Creates new form NotificacoesJFrame
      */
     public ImoveisJFrame() {
         initComponents();
+        initState();
+    }
+
+    private void initState() {
+        dtm = new DefaultTableModel(columns, 0);
+        tbmImoveis.setModel(dtm);
+        tbmImoveis.setDefaultEditor(Imovel.class, null);
+        updateTable();
+    }
+
+    public void updateTable() {
+        
+        //Limpar tabela
+        while (tbmImoveis.getRowCount() > 0) {
+            dtm.removeRow(0);
+        }
+
+        //setar títulos
+        dtm = new DefaultTableModel(columns, 0);
+
+        String jpql = "SELECT m FROM Imovel m";
+        TypedQuery<Imovel> query = Main.em.createQuery(jpql, Imovel.class);
+        List<Imovel> thisList = query.getResultList();
+
+        //add linhas
+        for (Imovel m : thisList) {
+            String isFavorite;
+            
+            if (m.isFavorite()) {
+                isFavorite = "Sim";
+            } else {
+                isFavorite = "Não";
+            }
+            
+            String cliente;
+            if(m.getCliente() != null){
+                System.out.println(m.toString());
+                cliente = m.getCliente().getNome();
+            }else{
+                cliente = "Disponível";
+            }
+            
+            String[] row = {String.valueOf(m.getId()), m.getDescription(), m.getEndereco(), cliente, m.getLastChange().toString(), isFavorite};
+            dtm.addRow(row);
+        }
+        tbmImoveis.setModel(dtm);
     }
 
     /**
@@ -28,13 +84,13 @@ public class ImoveisJFrame extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tbmImoveis = new javax.swing.JTable();
 
         setClosable(true);
         setTitle("Imóveis");
         setVisible(true);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tbmImoveis.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -45,7 +101,12 @@ public class ImoveisJFrame extends javax.swing.JInternalFrame {
                 "Descrição", "Imóvel", "Data", "Hora"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tbmImoveis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbmImoveisMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tbmImoveis);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,9 +122,23 @@ public class ImoveisJFrame extends javax.swing.JInternalFrame {
         setBounds(0, 0, 903, 481);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tbmImoveisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbmImoveisMouseClicked
+        if (tbmImoveis.getSelectedRow() != -1) {
+            String id = (String) dtm.getValueAt(tbmImoveis.getSelectedRow(), 0);
+            Util.print(String.valueOf(id));
+
+            String jpql = "SELECT m FROM Imovel m WHERE m.id = :id";
+            TypedQuery<Imovel> query = Main.em.createQuery(jpql, Imovel.class);
+            query.setParameter("id", Integer.valueOf(id));
+            Imovel imovel = query.getSingleResult();
+            HomeJFrame.selectedImovel = imovel;
+            Util.print(HomeJFrame.selectedImovel.getDescription());
+        }
+    }//GEN-LAST:event_tbmImoveisMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tbmImoveis;
     // End of variables declaration//GEN-END:variables
 }

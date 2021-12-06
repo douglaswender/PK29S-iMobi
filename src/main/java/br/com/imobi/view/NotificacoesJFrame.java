@@ -5,17 +5,76 @@
  */
 package br.com.imobi.view;
 
+import br.com.imobi.app.Main;
+import br.com.imobi.model.Mensagem;
+import br.com.imobi.model.Notificacao;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author dglsw
  */
 public class NotificacoesJFrame extends javax.swing.JInternalFrame {
 
+    private final String[] columns = {"Descrição", "Usuário", "Horário"};
+    private DefaultTableModel dtm;
+
     /**
      * Creates new form NotificacoesJFrame
      */
     public NotificacoesJFrame() {
         initComponents();
+        initState();
+    }
+
+    private void initState() {
+        dtm = new DefaultTableModel(columns, 0);
+        tblNotificacao.setModel(dtm);
+        tblNotificacao.setEnabled(false);
+        updateTable();
+
+    }
+
+    public void updateTable() {
+
+        dtm = new DefaultTableModel(columns, 0);
+
+        String jpql = "";
+
+        if (!Main.uLogado.isAdmin()) {
+            jpql = "SELECT n FROM Notificacao n WHERE n.usuario = :p";
+        } else {
+            jpql = "SELECT n FROM Notificacao n WHERE n.usuario = :p OR n.usuario = NULL";
+
+        }
+
+        TypedQuery<Notificacao> query = Main.em.createQuery(jpql, Notificacao.class);
+        query.setParameter("p", Main.uLogado);
+
+        List<Notificacao> thisList = query.getResultList();
+
+        System.out.println("br.com.imobi.view.NotificacoesJFrame.updateTable()");
+        System.out.println(thisList);
+
+        for (Notificacao m : thisList) {
+            String notificacao = "";
+            if(m.getUsuario() == null){
+                notificacao = "Todos";
+            } else{
+                notificacao = m.getUsuario().getLogin();
+            }
+            String[] row = {m.getDescription(), notificacao, m.getTimestamp().toString()};
+            dtm.addRow(row);
+        }
+
+        tblNotificacao.setModel(dtm);
+
+        //tblMessages.valueChanged(thisList.toArray);
     }
 
     /**
@@ -28,13 +87,14 @@ public class NotificacoesJFrame extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblNotificacao = new javax.swing.JTable();
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setTitle("Notificações");
         setVisible(true);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblNotificacao.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -42,16 +102,19 @@ public class NotificacoesJFrame extends javax.swing.JInternalFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Descrição", "Imóvel", "Data", "Hora"
+                "Descrição", "Imóvel", "Usuário", "Hora"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblNotificacao);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 887, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 867, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -64,6 +127,6 @@ public class NotificacoesJFrame extends javax.swing.JInternalFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblNotificacao;
     // End of variables declaration//GEN-END:variables
 }

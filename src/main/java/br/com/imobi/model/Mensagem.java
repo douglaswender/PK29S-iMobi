@@ -6,20 +6,25 @@
 package br.com.imobi.model;
 
 import java.sql.Timestamp;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author dglsw
  */
+@Entity
 public class Mensagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String message;
+    @OneToOne
     private Usuario sender;
+    @OneToOne
     private Usuario receiver;
     private Timestamp timestamp;
 
@@ -72,6 +77,11 @@ public class Mensagem {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "Mensagem{" + "id=" + id + ", message=" + message + ", sender=" + sender + ", receiver=" + receiver + ", timestamp=" + timestamp + '}';
     }
     
     

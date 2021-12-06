@@ -6,32 +6,38 @@
 package br.com.imobi.model;
 
 import java.sql.Timestamp;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author dglsw
  */
+@Entity
 public class Imovel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String description;
-    private Endereco endereco;
-    private Timestamp timestamp ;
-    private boolean isFavorite;
+    private String endereco;
+    private Timestamp lastChange ;
+    private boolean favorite;
+    @OneToOne
+    private Cliente cliente;
 
     public Imovel() {
     }
 
-    public Imovel(int id, String description, Endereco endereco, Timestamp timestamp, boolean isFavorite) {
+    public Imovel(int id, String description, String endereco, Timestamp timestamp, boolean isFavorite, Cliente cliente) {
         this.id = id;
         this.description = description;
         this.endereco = endereco;
-        this.timestamp = timestamp;
-        this.isFavorite = isFavorite;
+        this.lastChange = timestamp;
+        this.favorite = isFavorite;
+        this.cliente = cliente;
     }
 
     public int getId() {
@@ -50,21 +56,44 @@ public class Imovel {
         this.description = description;
     }
 
-    public Endereco getEndereco() {
+    public String getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(Endereco endereco) {
+    public void setEndereco(String endereco) {
         this.endereco = endereco;
     }
 
     public Timestamp getLastChange() {
-        return timestamp;
+        return lastChange;
     }
 
     public void setLastChange(Timestamp lastChange) {
-        this.timestamp = lastChange;
+        this.lastChange = lastChange;
     }
+
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean isFavorite) {
+        this.favorite = isFavorite;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    @Override
+    public String toString() {
+        return "Imovel{" + "id=" + id + ", description=" + description + ", endereco=" + endereco + ", lastChange=" + lastChange + ", favorite=" + favorite + ", cliente=" + cliente + '}';
+    }
+    
     
     
 }

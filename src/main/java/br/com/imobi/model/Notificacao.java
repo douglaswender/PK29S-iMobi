@@ -6,22 +6,27 @@
 package br.com.imobi.model;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author dglsw
  */
+@Entity
 public class Notificacao {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String description;
-    private Imovel imovel;
     private Timestamp timestamp;
+    @ManyToOne
+    private Usuario usuario;
 
     public Notificacao() {
     }
@@ -29,7 +34,6 @@ public class Notificacao {
     public Notificacao(int id, String description, Imovel imovel, Timestamp timestamp) {
         this.id = id;
         this.description = description;
-        this.imovel = imovel;
         this.timestamp = timestamp;
     }
 
@@ -49,13 +53,6 @@ public class Notificacao {
         this.description = description;
     }
 
-    public Imovel getImovel() {
-        return imovel;
-    }
-
-    public void setImovel(Imovel imovel) {
-        this.imovel = imovel;
-    }
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -64,9 +61,13 @@ public class Notificacao {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
-    
-    
-    
-    
-    
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
 }

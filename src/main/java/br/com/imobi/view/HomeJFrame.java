@@ -6,10 +6,11 @@
 package br.com.imobi.view;
 
 import br.com.imobi.app.Main;
+import br.com.imobi.app.Util;
+import br.com.imobi.model.Imovel;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -18,22 +19,30 @@ import javax.swing.JOptionPane;
  * @author dglsw
  */
 public class HomeJFrame extends javax.swing.JFrame {
-
-    private final ImoveisJFrame janelaImoveis = new ImoveisJFrame();
-    private final FavoritosJFrame janelaFavoritos = new FavoritosJFrame();
-    private final MensagensJFrame janelaMensagens = new MensagensJFrame();
-    private final NotificacoesJFrame janelaNotificacoes = new NotificacoesJFrame();
-    private final ClientesJFrame janelaClientes = new ClientesJFrame();
-
-    private int selectedIndex = 0;
+    
+    public static ImoveisJFrame janelaImoveis;
+    public static FavoritosJFrame janelaFavoritos;
+    public static NotificacoesJFrame janelaNotificacoes;
+    public static MensagensJFrame janelaMensagens;
+    public static ClientesJFrame janelaClientes;
+    
+    private int selectedIndex = -1;
+    public static Imovel selectedImovel;
 
     /**
      * Creates new form Home
      */
     public HomeJFrame() {
         initComponents();
+        initState();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
+        
+    }
+    
+    private void initState() {
+        if (!Main.uLogado.isAdmin()) {
+            Util.print("is Not admin");
+        }
     }
 
     /**
@@ -46,7 +55,7 @@ public class HomeJFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        btnVoltar = new javax.swing.JButton();
+        btnNovo = new javax.swing.JButton();
         btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         dskMain = new javax.swing.JDesktopPane();
@@ -57,6 +66,7 @@ public class HomeJFrame extends javax.swing.JFrame {
         btnFavoritos = new javax.swing.JButton();
         btnImoveis = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
+        btnAbrir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
@@ -67,10 +77,10 @@ public class HomeJFrame extends javax.swing.JFrame {
             }
         });
 
-        btnVoltar.setText("Novo");
-        btnVoltar.addActionListener(new java.awt.event.ActionListener() {
+        btnNovo.setText("Novo");
+        btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnVoltarActionPerformed(evt);
+                btnNovoActionPerformed(evt);
             }
         });
 
@@ -161,6 +171,13 @@ public class HomeJFrame extends javax.swing.JFrame {
         });
         jToolBar1.add(btnClientes);
 
+        btnAbrir.setText("Abrir");
+        btnAbrir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -176,8 +193,10 @@ public class HomeJFrame extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnVoltar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 951, Short.MAX_VALUE)
+                        .addComponent(btnNovo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAbrir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 890, Short.MAX_VALUE)
                         .addComponent(btnSalvar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExcluir))
@@ -191,7 +210,8 @@ public class HomeJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExcluir)
                     .addComponent(btnSalvar)
-                    .addComponent(btnVoltar))
+                    .addComponent(btnNovo)
+                    .addComponent(btnAbrir))
                 .addGap(27, 27, 27)
                 .addComponent(dskMain)
                 .addGap(20, 20, 20))
@@ -211,31 +231,93 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         // TODO add your handling code here:
-        selectedIndex = 4;
-        janelaClientes.setVisible(true);
-
-        try {
-            janelaClientes.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (selectedIndex != 4) {
+            selectedIndex = 4;
+            if (!Main.uLogado.isAdmin()) {
+                btnNovo.setEnabled(false);
+            } else {
+                btnNovo.setEnabled(true);
+            }
+            
+            if (janelaClientes == null) {
+                janelaClientes = new ClientesJFrame();
+                dskMain.add(janelaClientes);
+            }
+            if (!janelaClientes.isVisible()) {
+                janelaClientes.setVisible(true);
+            }
+            
+            janelaClientes.toFront();
+            try {
+                janelaClientes.setMaximum(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
-        dskMain.add(janelaClientes);
+
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnMensagensActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMensagensActionPerformed
-        // TODO add your handling code here:
-        selectedIndex = 1;
-        janelaMensagens.setVisible(true);
-        try {
-            janelaMensagens.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (selectedIndex != 1) {
+            selectedIndex = 1;
+            btnNovo.setEnabled(true);
+            btnAbrir.setEnabled(false);
+            if (janelaMensagens == null) {
+                janelaMensagens = new MensagensJFrame();
+                dskMain.add(janelaMensagens);
+            }
+            if (!janelaMensagens.isVisible()) {
+                janelaMensagens.setVisible(true);
+            }
+            
+            janelaMensagens.toFront();
+            try {
+                janelaMensagens.setMaximum(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
-        dskMain.add(janelaMensagens);
+
     }//GEN-LAST:event_btnMensagensActionPerformed
 
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-        // TODO add your handling code here:
+        Util.print("Excluir");
+        switch (selectedIndex) {
+            case 0:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 1:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            
+            case 2:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 3:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                Imovel u = Main.em.find(Imovel.class, selectedImovel.getId());
+                
+                if (u != null) {
+                    try {
+                        Main.em.getTransaction().begin();
+                        Main.em.remove(u);
+                        Main.em.getTransaction().commit();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(rootPane, "Houve um erro ao tentar excluir o imóvel!");
+                    }
+                    janelaImoveis.updateTable();
+                }
+                break;
+            case 4:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
+            
+        }
+        
 
     }//GEN-LAST:event_btnExcluirActionPerformed
 
@@ -245,75 +327,150 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     private void btnNotificacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacoesActionPerformed
         // TODO add your handling code here:
-        selectedIndex = 0;
-        janelaNotificacoes.setVisible(true);
-        try {
-            janelaNotificacoes.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (selectedIndex != 0) {
+            selectedIndex = 0;
+            btnNovo.setEnabled(false);
+            btnAbrir.setEnabled(false);
+            if (janelaNotificacoes == null) {
+                janelaNotificacoes = new NotificacoesJFrame();
+                dskMain.add(janelaNotificacoes);
+            }
+            if (!janelaNotificacoes.isVisible()) {
+                janelaNotificacoes.setVisible(true);
+            }
+            
+            janelaNotificacoes.toFront();
+            try {
+                janelaNotificacoes.setMaximum(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
         }
-        dskMain.add(janelaNotificacoes);
+        
 
     }//GEN-LAST:event_btnNotificacoesActionPerformed
 
     private void btnFavoritosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFavoritosActionPerformed
         // TODO add your handling code here:
-        selectedIndex = 2;
-        janelaFavoritos.setVisible(true);
-        try {
-            janelaFavoritos.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (selectedIndex != 2) {
+            selectedIndex = 2;
+            btnNovo.setEnabled(false);
+            btnAbrir.setEnabled(false);
+            if (janelaFavoritos == null) {
+                janelaFavoritos = new FavoritosJFrame();
+                dskMain.add(janelaFavoritos);
+            }
+            if (!janelaFavoritos.isVisible()) {
+                janelaFavoritos.setVisible(true);
+            }
+            janelaFavoritos.toFront();
+            
+            try {
+                janelaFavoritos.setMaximum(true);
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        dskMain.add(janelaFavoritos);
+
     }//GEN-LAST:event_btnFavoritosActionPerformed
 
     private void btnImoveisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImoveisActionPerformed
         // TODO add your handling code here:
-        selectedIndex = 3;
-        janelaImoveis.setVisible(true);
-        try {
-            janelaImoveis.setMaximum(true);
-        } catch (PropertyVetoException ex) {
-            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        if (selectedIndex != 3) {
+            if (!Main.uLogado.isAdmin()) {
+                btnNovo.setEnabled(false);
+            } else {
+                btnNovo.setEnabled(true);
+            }
+            selectedIndex = 3;
+            
+            btnAbrir.setEnabled(true);
+            if (janelaImoveis == null) {
+                janelaImoveis = new ImoveisJFrame();
+                dskMain.add(janelaImoveis);
+            }
+            if (!janelaImoveis.isVisible()) {
+                janelaImoveis.setVisible(true);
+            }
+            janelaImoveis.toFront();
+            
+            try {
+                janelaImoveis.setMaximum(true);
+                
+            } catch (PropertyVetoException ex) {
+                Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        dskMain.add(janelaImoveis);
+
     }//GEN-LAST:event_btnImoveisActionPerformed
 
-    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        // TODO add your handling code here:
+    private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         switch (selectedIndex) {
             case 0:
                 System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
                 break;
             case 1:
-                NovaMensagemJDialog dialog = new NovaMensagemJDialog(this, rootPaneCheckingEnabled);
-                dialog.setLocationRelativeTo(null);
-                dialog.setVisible(true);
+                MensagemJDialog mensagemDialog = new MensagemJDialog(this, rootPaneCheckingEnabled);
+                mensagemDialog.setLocationRelativeTo(null);
+                mensagemDialog.setVisible(true);
                 break;
+            
             case 2:
                 System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
                 break;
             case 3:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                ImoveisJDialog imoveisDialog = new ImoveisJDialog(this, rootPaneCheckingEnabled);
+                imoveisDialog.setLocationRelativeTo(null);
+                imoveisDialog.setVisible(true);
                 break;
             case 4:
                 System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
-
+            
         }
-    }//GEN-LAST:event_btnVoltarActionPerformed
+    }//GEN-LAST:event_btnNovoActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
         try {
             Main.closeConn();
         } catch (Exception e) {
-
+            
         }
     }//GEN-LAST:event_formWindowClosed
+
+    private void btnAbrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirActionPerformed
+        Util.print("Abrir");
+        switch (selectedIndex) {
+            case 0:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 1:
+                MensagemJDialog mensagemDialog = new MensagemJDialog(this, rootPaneCheckingEnabled);
+                mensagemDialog.setLocationRelativeTo(null);
+                mensagemDialog.setVisible(true);
+                break;
+            
+            case 2:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            case 3:
+                ImoveisJDialog imoveisDialog = new ImoveisJDialog(this, rootPaneCheckingEnabled, selectedImovel);
+                imoveisDialog.setLocationRelativeTo(null);
+                imoveisDialog.setVisible(true);
+                break;
+            case 4:
+                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                break;
+            default:
+                JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
+            
+        }
+
+    }//GEN-LAST:event_btnAbrirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -352,14 +509,15 @@ public class HomeJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbrir;
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFavoritos;
     private javax.swing.JButton btnImoveis;
     private javax.swing.JButton btnMensagens;
     private javax.swing.JButton btnNotificacoes;
+    private javax.swing.JButton btnNovo;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JButton btnVoltar;
     private javax.swing.JDesktopPane dskMain;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

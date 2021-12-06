@@ -6,38 +6,44 @@
 package br.com.imobi.view;
 
 import br.com.imobi.app.Main;
+import br.com.imobi.model.Mensagem;
+import br.com.imobi.model.Notificacao;
 import br.com.imobi.model.Usuario;
-import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import javax.persistence.TypedQuery;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author dglsw
  */
-public class NovaMensagemJDialog extends javax.swing.JDialog {
+public class MensagemJDialog extends javax.swing.JDialog {
+
     /**
      * Creates new form NovaMensagemJDialog
      */
-    public NovaMensagemJDialog(java.awt.Frame parent, boolean modal) {
+    public MensagemJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+
         initComponents();
         loadUserList();
     }
 
     private void loadUserList() {
+        //Busca os usuários no banco
         String jpql = "SELECT u FROM Usuario u WHERE u.login != :login";
-
         TypedQuery<Usuario> query = Main.em.createQuery(jpql, Usuario.class);
         query.setParameter("login", Main.uLogado.getLogin());
-
         List<Usuario> thisList = query.getResultList();
 
-        System.out.println(thisList);
+        //Add lista de usuários a combobox
+        //TODO: Configurar o .toString do objeto Usuário
         for (Usuario u : thisList) {
             cmbListUsuarios.addItem(u);
         }
-        
 
     }
 
@@ -54,8 +60,8 @@ public class NovaMensagemJDialog extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         cmbListUsuarios = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        txtMessage = new javax.swing.JTextArea();
+        btnSend = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setLocation(new java.awt.Point(0, 0));
@@ -64,14 +70,14 @@ public class NovaMensagemJDialog extends javax.swing.JDialog {
 
         jLabel2.setText("Mensagem:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        txtMessage.setColumns(20);
+        txtMessage.setRows(5);
+        jScrollPane1.setViewportView(txtMessage);
 
-        jButton1.setText("Enviar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnSend.setText("Enviar");
+        btnSend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnSendActionPerformed(evt);
             }
         });
 
@@ -82,7 +88,7 @@ public class NovaMensagemJDialog extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
+                    .addComponent(btnSend)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jScrollPane1)
                         .addGroup(layout.createSequentialGroup()
@@ -105,16 +111,47 @@ public class NovaMensagemJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addComponent(btnSend)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSendActionPerformed
+        if (!this.txtMessage.getText().isEmpty()) {
+            //Cria instancia de mensagem
+            Mensagem mensagem = new Mensagem(0, this.txtMessage.getText(), Main.uLogado, this.cmbListUsuarios.getItemAt(this.cmbListUsuarios.getSelectedIndex()), Timestamp.from(Instant.now()));
+
+            //Envia mensagem pro banco
+            try {
+                Main.em.getTransaction().begin();
+                Main.em.persist(mensagem);
+                Main.em.getTransaction().commit();
+                HomeJFrame.janelaMensagens.updateTable();
+                this.dispose();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Houve ume erro!");
+            }
+
+            //Cria instancia de notificação
+            Notificacao n = new Notificacao();
+            n.setDescription("Nova mensagem de " + Main.uLogado.getLogin() + " | "+ mensagem.getMessage());
+            n.setTimestamp(Timestamp.from(Instant.now()));
+            n.setUsuario(this.cmbListUsuarios.getItemAt(this.cmbListUsuarios.getSelectedIndex()));
+
+            //Envia notificação pro banco
+            try {
+                Main.em.getTransaction().begin();
+                Main.em.persist(n);
+                Main.em.getTransaction().commit();
+                HomeJFrame.janelaNotificacoes.updateTable();
+                this.dispose();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Houve ume erro ao notificar!");
+            }
+        }
+    }//GEN-LAST:event_btnSendActionPerformed
 
     /**
      * @param args the command line arguments
@@ -133,20 +170,21 @@ public class NovaMensagemJDialog extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(NovaMensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(NovaMensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(NovaMensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(NovaMensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(MensagemJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                NovaMensagemJDialog dialog = new NovaMensagemJDialog(new javax.swing.JFrame(), true);
+                MensagemJDialog dialog = new MensagemJDialog(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -159,11 +197,11 @@ public class NovaMensagemJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnSend;
     private javax.swing.JComboBox<Usuario> cmbListUsuarios;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea txtMessage;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,17 +5,72 @@
  */
 package br.com.imobi.view;
 
+import br.com.imobi.app.Main;
+import br.com.imobi.app.Util;
+import br.com.imobi.model.Mensagem;
+import br.com.imobi.model.Notificacao;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.List;
+import javax.persistence.TypedQuery;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author dglsw
  */
 public class MensagensJFrame extends javax.swing.JInternalFrame {
 
+    private final String[] columns = {"Código", "Mensagem", "Remetente", "Destinatário", "Horário"};
+    private DefaultTableModel dtm;
+
+    public MensagensJFrame(JScrollPane jScrollPane1) {
+        this.jScrollPane1 = jScrollPane1;
+        dtm = new DefaultTableModel(columns, 0);
+        tblMessages.setModel(dtm);
+    }
+
     /**
      * Creates new form NotificacoesJFrame
      */
     public MensagensJFrame() {
         initComponents();
+        initState();
+    }
+
+    private void initState() {
+        dtm = new DefaultTableModel(columns, 0);
+        tblMessages.setModel(dtm);
+        tblMessages.setDefaultEditor(Mensagem.class, null);
+        updateTable();
+
+    }
+
+    public void updateTable() {
+        
+        //Limpar tabela
+        while(tblMessages.getRowCount()>0){
+            dtm.removeRow(0);
+        }
+
+        //setar títulos
+        dtm = new DefaultTableModel(columns, 0);
+
+        String jpql = "SELECT m FROM Mensagem m WHERE m.receiver = :sender OR m.sender = :sender";
+        TypedQuery<Mensagem> query = Main.em.createQuery(jpql, Mensagem.class);
+        query.setParameter("sender", Main.uLogado);
+        List<Mensagem> thisList = query.getResultList();
+
+        //add linhas
+        for (Mensagem m : thisList) {
+            String[] row = {String.valueOf(m.getId()), m.getMessage(), m.getSender().getLogin(), m.getReceiver().getLogin(), m.getTimestamp().toString()};
+            dtm.addRow(row);
+        }
+
+        tblMessages.setModel(dtm);
+
     }
 
     /**
@@ -28,24 +83,41 @@ public class MensagensJFrame extends javax.swing.JInternalFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblMessages = new javax.swing.JTable();
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setTitle("Mensagens");
         setVisible(true);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblMessages.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Descrição", "Imóvel", "Data", "Hora"
+                "Mensagem", "Usuário", "Horário"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblMessages.setEditingColumn(0);
+        tblMessages.setEditingRow(1);
+        tblMessages.setShowGrid(true);
+        tblMessages.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMessagesMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblMessages);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -61,9 +133,18 @@ public class MensagensJFrame extends javax.swing.JInternalFrame {
         setBounds(0, 0, 903, 481);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void tblMessagesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMessagesMouseClicked
+        
+        if (tblMessages.getSelectedRow() != -1) {
+            String id = (String) dtm.getValueAt(tblMessages.getSelectedRow(), 0);
+            System.out.println(id);
+            Util.print(String.valueOf(id));
+        }
+    }//GEN-LAST:event_tblMessagesMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblMessages;
     // End of variables declaration//GEN-END:variables
 }
