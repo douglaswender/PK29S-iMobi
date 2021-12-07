@@ -56,7 +56,6 @@ public class HomeJFrame extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         btnNovo = new javax.swing.JButton();
-        btnSalvar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
         dskMain = new javax.swing.JDesktopPane();
         jLabel2 = new javax.swing.JLabel();
@@ -81,13 +80,6 @@ public class HomeJFrame extends javax.swing.JFrame {
         btnNovo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNovoActionPerformed(evt);
-            }
-        });
-
-        btnSalvar.setText("Salvar");
-        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarActionPerformed(evt);
             }
         });
 
@@ -196,9 +188,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                         .addComponent(btnNovo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnAbrir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 890, Short.MAX_VALUE)
-                        .addComponent(btnSalvar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 959, Short.MAX_VALUE)
                         .addComponent(btnExcluir))
                     .addComponent(dskMain))
                 .addContainerGap())
@@ -209,7 +199,6 @@ public class HomeJFrame extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExcluir)
-                    .addComponent(btnSalvar)
                     .addComponent(btnNovo)
                     .addComponent(btnAbrir))
                 .addGap(27, 27, 27)
@@ -321,10 +310,6 @@ public class HomeJFrame extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalvarActionPerformed
-
     private void btnNotificacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotificacoesActionPerformed
         // TODO add your handling code here:
         if (selectedIndex != 0) {
@@ -425,6 +410,9 @@ public class HomeJFrame extends javax.swing.JFrame {
                 imoveisDialog.setVisible(true);
                 break;
             case 4:
+                ClientesJDialog clientesDialog = new ClientesJDialog(this, rootPaneCheckingEnabled);
+                clientesDialog.setLocationRelativeTo(null);
+                clientesDialog.setVisible(true);
                 System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
                 break;
             default:
@@ -517,7 +505,6 @@ public class HomeJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnMensagens;
     private javax.swing.JButton btnNotificacoes;
     private javax.swing.JButton btnNovo;
-    private javax.swing.JButton btnSalvar;
     private javax.swing.JDesktopPane dskMain;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -53,7 +53,6 @@ public class ImoveisJFrame extends javax.swing.JInternalFrame {
         //add linhas
         for (Imovel m : thisList) {
             String isFavorite;
-            
             if (m.isFavorite()) {
                 isFavorite = "Sim";
             } else {

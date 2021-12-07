@@ -31,6 +31,7 @@ public class FavoritosJFrame extends javax.swing.JInternalFrame {
         jTable1 = new javax.swing.JTable();
 
         setClosable(true);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         setTitle("Favoritos");
         setVisible(true);
 

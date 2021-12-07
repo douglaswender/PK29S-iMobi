@@ -195,9 +195,6 @@ public class ImoveisJDialog extends javax.swing.JDialog {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         if (!this.txtDescription.getText().isEmpty() && !this.txtEndereco.getText().isEmpty()) {
             Cliente c = cmbCliente.getItemAt(cmbCliente.getSelectedIndex());
-            if(c.getId() != -1){
-                c = null;
-            }
             Imovel thisImovel = new Imovel(0, this.txtDescription.getText(), this.txtEndereco.getText(), Timestamp.from(Instant.now()), chkFavorite.isSelected(), c);
             System.out.println(imovel);
 
