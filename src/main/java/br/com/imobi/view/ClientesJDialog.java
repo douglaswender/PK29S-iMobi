@@ -18,12 +18,31 @@ import javax.swing.JOptionPane;
  */
 public class ClientesJDialog extends javax.swing.JDialog {
 
+    private Cliente cliente;
+    private boolean isEdit = false;
+
     /**
      * Creates new form ClientesJDialog
      */
     public ClientesJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+    }
+
+    public ClientesJDialog(java.awt.Frame parent, boolean modal, Cliente cliente) {
+        super(parent, modal);
+        this.cliente = cliente;
+        this.isEdit = true;
+        initComponents();
+        initState();
+    }
+
+    private void initState() {
+
+        //atribuir valores aos campos de texto
+        edtNome.setText(cliente.getNome());
+        edtCpf.setText(cliente.getCpf());
+        edtTelefone.setText(cliente.getTelefone());
     }
 
     /**
@@ -137,27 +156,53 @@ public class ClientesJDialog extends javax.swing.JDialog {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO ação de salvar
         if (!edtNome.getText().isEmpty() && !edtCpf.getText().isEmpty() && !edtTelefone.getText().isEmpty()) {
-            Cliente thisCliente = new Cliente(edtNome.getText(), edtCpf.getText(), edtTelefone.getText());
-            try {
-                Main.em.getTransaction().begin();
-                Main.em.persist(thisCliente);
-                Main.em.getTransaction().commit();
 
-                //update table cliente jframe
-                HomeJFrame.janelaClientes.updateTable();
+            if (!isEdit) {
+                try {
+                    Cliente thisCliente = new Cliente(edtNome.getText(), edtCpf.getText(), edtTelefone.getText());
+                    Main.em.getTransaction().begin();
+                    Main.em.persist(thisCliente);
+                    Main.em.getTransaction().commit();
 
-                //Cria instancia de notificação
-                Notificacao n = new Notificacao();
-                n.setDescription("Novo cliente cadastrado por " + Main.uLogado.getLogin() + " | " + thisCliente.getNome()+ ", " + thisCliente.getTelefone());
-                n.setTimestamp(Timestamp.from(Instant.now()));
-                n.setUsuario(null);
-                Main.em.getTransaction().begin();
-                Main.em.persist(n);
-                Main.em.getTransaction().commit();
-                this.dispose();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(rootPane, e.toString());
+                    //update table cliente jframe
+                    HomeJFrame.janelaClientes.updateTable();
+
+                    //Cria instancia de notificação
+                    Notificacao n = new Notificacao();
+                    n.setDescription("Novo cliente cadastrado por " + Main.uLogado.getLogin() + " | " + thisCliente.getNome() + ", " + thisCliente.getTelefone());
+                    n.setTimestamp(Timestamp.from(Instant.now()));
+                    n.setUsuario(null);
+                    Main.em.getTransaction().begin();
+                    Main.em.persist(n);
+                    Main.em.getTransaction().commit();
+                    this.dispose();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(rootPane, e.toString());
+                }
+            } else {
+                try {
+                    Cliente thisCliente = new Cliente(HomeJFrame.selectedCliente.getId(), edtNome.getText(), edtCpf.getText(), edtTelefone.getText());
+                    Main.em.getTransaction().begin();
+                    Main.em.merge(thisCliente);
+                    Main.em.getTransaction().commit();
+
+                    //update table cliente jframe
+                    HomeJFrame.janelaClientes.updateTable();
+
+                    //Cria instancia de notificação
+                    Notificacao n = new Notificacao();
+                    n.setDescription("Cliente editado por " + Main.uLogado.getLogin() + " | " + thisCliente.getNome() + ", " + thisCliente.getTelefone());
+                    n.setTimestamp(Timestamp.from(Instant.now()));
+                    n.setUsuario(null);
+                    Main.em.getTransaction().begin();
+                    Main.em.persist(n);
+                    Main.em.getTransaction().commit();
+                    this.dispose();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(rootPane, e.toString());
+                }
             }
+
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 

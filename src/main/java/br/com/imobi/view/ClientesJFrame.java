@@ -84,6 +84,11 @@ public class ClientesJFrame extends javax.swing.JInternalFrame {
                 "Descrição", "Imóvel", "Data", "Hora"
             }
         ));
+        tblClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblClientes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -99,6 +104,19 @@ public class ClientesJFrame extends javax.swing.JInternalFrame {
 
         setBounds(0, 0, 903, 481);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
+        if(tblClientes.getSelectedRow() != -1){
+            String id = (String)dtm.getValueAt(tblClientes.getSelectedRow(), 0);
+            
+            String jpql = "SELECT c FROM Cliente c WHERE c.id = :id";
+            TypedQuery<Cliente> query = Main.em.createQuery(jpql, Cliente.class);
+            query.setParameter("id", Integer.valueOf(id));
+            Cliente cliente = query.getSingleResult();
+            HomeJFrame.selectedCliente = cliente;
+           
+        }
+    }//GEN-LAST:event_tblClientesMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
