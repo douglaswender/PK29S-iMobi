@@ -21,13 +21,13 @@ import javax.swing.JOptionPane;
  * @author dglsw
  */
 public class HomeJFrame extends javax.swing.JFrame {
-    
+
     public static ImoveisJFrame janelaImoveis;
     public static FavoritosJFrame janelaFavoritos;
     public static NotificacoesJFrame janelaNotificacoes;
     public static MensagensJFrame janelaMensagens;
     public static ClientesJFrame janelaClientes;
-    
+
     private int selectedIndex = -1;
     public static Imovel selectedImovel;
     public static Cliente selectedCliente;
@@ -39,11 +39,11 @@ public class HomeJFrame extends javax.swing.JFrame {
         initComponents();
         initState();
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
+
     }
-    
+
     private void initState() {
-        lblUsuario.setText("Olá "+Main.uLogado.getName());
+        lblUsuario.setText("Olá " + Main.uLogado.getName());
         if (!Main.uLogado.isAdmin()) {
             Util.print("is Not admin");
         }
@@ -241,27 +241,27 @@ public class HomeJFrame extends javax.swing.JFrame {
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         // TODO add your handling code here:
         //if (selectedIndex != 4) {
-            selectedIndex = 4;
-            btnNovo.setEnabled(true);
-            btnExcluir.setEnabled(true);
-            btnGerarRelatorio.setEnabled(false);
-            
-            if (janelaClientes == null) {
-                janelaClientes = new ClientesJFrame();
-                dskMain.add(janelaClientes);
-            }
-            if (!janelaClientes.isVisible()) {
-                janelaClientes.setVisible(true);
-            }
-            
-            janelaClientes.toFront();
-            janelaClientes.setFocusable(true);
-            try {
-                janelaClientes.setMaximum(true);
-            } catch (PropertyVetoException ex) {
-                Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
+        selectedIndex = 4;
+        btnNovo.setEnabled(true);
+        btnExcluir.setEnabled(true);
+        btnGerarRelatorio.setEnabled(false);
+
+        if (janelaClientes == null) {
+            janelaClientes = new ClientesJFrame();
+            dskMain.add(janelaClientes);
+        }
+        if (!janelaClientes.isVisible()) {
+            janelaClientes.setVisible(true);
+        }
+
+        janelaClientes.toFront();
+        janelaClientes.setFocusable(true);
+        try {
+            janelaClientes.setMaximum(true);
+        } catch (PropertyVetoException ex) {
+            Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         //}
 
     }//GEN-LAST:event_btnClientesActionPerformed
@@ -280,14 +280,14 @@ public class HomeJFrame extends javax.swing.JFrame {
             if (!janelaMensagens.isVisible()) {
                 janelaMensagens.setVisible(true);
             }
-            
+
             janelaMensagens.toFront();
             try {
                 janelaMensagens.setMaximum(true);
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
 
     }//GEN-LAST:event_btnMensagensActionPerformed
@@ -301,13 +301,13 @@ public class HomeJFrame extends javax.swing.JFrame {
             case 1:
                 System.out.println("1");
                 break;
-            
+
             case 2:
                 System.out.println("2");
                 break;
             case 3:
                 Imovel u = Main.em.find(Imovel.class, selectedImovel.getId());
-                
+
                 if (u != null) {
                     try {
                         Main.em.getTransaction().begin();
@@ -316,12 +316,18 @@ public class HomeJFrame extends javax.swing.JFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(rootPane, "Houve um erro ao tentar excluir o imóvel!");
                     }
-                    janelaImoveis.updateTable();
+                    if (janelaImoveis != null) {
+                        janelaImoveis.updateTable();
+                    }
+
+                    if (janelaFavoritos != null) {
+                        janelaFavoritos.updateTable();
+                    }
                 }
                 break;
             case 4:
                 Cliente c = Main.em.find(Cliente.class, selectedCliente.getId());
-                
+
                 if (c != null) {
                     try {
                         Main.em.getTransaction().begin();
@@ -330,14 +336,16 @@ public class HomeJFrame extends javax.swing.JFrame {
                     } catch (Exception e) {
                         JOptionPane.showMessageDialog(rootPane, "Houve um erro ao tentar excluir o imóvel!");
                     }
-                    janelaClientes.updateTable();
+                    if (janelaClientes != null) {
+                        janelaClientes.updateTable();
+                    }
                 }
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
-            
+
         }
-        
+
 
     }//GEN-LAST:event_btnExcluirActionPerformed
 
@@ -356,16 +364,16 @@ public class HomeJFrame extends javax.swing.JFrame {
             if (!janelaNotificacoes.isVisible()) {
                 janelaNotificacoes.setVisible(true);
             }
-            
+
             janelaNotificacoes.toFront();
             try {
                 janelaNotificacoes.setMaximum(true);
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
-        
+
 
     }//GEN-LAST:event_btnNotificacoesActionPerformed
 
@@ -385,7 +393,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                 janelaFavoritos.setVisible(true);
             }
             janelaFavoritos.toFront();
-            
+
             try {
                 janelaFavoritos.setMaximum(true);
             } catch (PropertyVetoException ex) {
@@ -400,9 +408,10 @@ public class HomeJFrame extends javax.swing.JFrame {
         if (selectedIndex != 3) {
             btnNovo.setEnabled(true);
             btnNovo.setEnabled(true);
+            btnExcluir.setEnabled(true);
             btnGerarRelatorio.setEnabled(true);
             selectedIndex = 3;
-            
+
             btnAbrir.setEnabled(true);
             if (janelaImoveis == null) {
                 janelaImoveis = new ImoveisJFrame();
@@ -412,10 +421,10 @@ public class HomeJFrame extends javax.swing.JFrame {
                 janelaImoveis.setVisible(true);
             }
             janelaImoveis.toFront();
-            
+
             try {
                 janelaImoveis.setMaximum(true);
-                
+
             } catch (PropertyVetoException ex) {
                 Logger.getLogger(HomeJFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -433,7 +442,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                 mensagemDialog.setLocationRelativeTo(null);
                 mensagemDialog.setVisible(true);
                 break;
-            
+
             case 2:
                 System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
                 break;
@@ -450,7 +459,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
-            
+
         }
     }//GEN-LAST:event_btnNovoActionPerformed
 
@@ -459,7 +468,7 @@ public class HomeJFrame extends javax.swing.JFrame {
         try {
             Main.closeConn();
         } catch (Exception e) {
-            
+
         }
     }//GEN-LAST:event_formWindowClosed
 
@@ -474,7 +483,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                 mensagemDialog.setLocationRelativeTo(null);
                 mensagemDialog.setVisible(true);
                 break;
-            
+
             case 2:
                 System.out.println("2");
                 ImoveisJDialog favoritoDialog = new ImoveisJDialog(this, rootPaneCheckingEnabled, selectedImovel);
@@ -493,7 +502,7 @@ public class HomeJFrame extends javax.swing.JFrame {
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Erro: Opção de seleção inválida");
-            
+
         }
 
     }//GEN-LAST:event_btnAbrirActionPerformed

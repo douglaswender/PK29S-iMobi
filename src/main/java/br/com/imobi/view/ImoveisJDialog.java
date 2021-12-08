@@ -20,9 +20,10 @@ import javax.swing.JOptionPane;
  * @author dglsw
  */
 public class ImoveisJDialog extends javax.swing.JDialog {
-
+    
     private Imovel imovel;
     private boolean isEdit = false;
+    private boolean isFavoriteFrame;
 
     //Construtor para novo
     public ImoveisJDialog(java.awt.Frame parent, boolean modal) {
@@ -36,29 +37,30 @@ public class ImoveisJDialog extends javax.swing.JDialog {
         super(parent, modal);
         this.imovel = imovel;
         this.isEdit = true;
+        this.isFavoriteFrame = false;
         initComponents();
         initState();
     }
-
+    
     private void initState() {
         loadClientes();
         if (imovel != null) {
             loadInfos();
         }
     }
-
+    
     private void loadInfos() {
         txtDescription.setText(imovel.getDescription());
         txtEndereco.setText(imovel.getEndereco());
-        if(imovel.getCliente() != null){
+        if (imovel.getCliente() != null) {
             cmbCliente.setSelectedItem(imovel.getCliente());
-        } else{
+        } else {
             cmbCliente.setSelectedIndex(0);
         }
         
         chkFavorite.setSelected(imovel.isFavorite());
     }
-
+    
     private void loadClientes() {
         //Busca os usuários no banco
         String jpql = "SELECT u FROM Cliente u";
@@ -67,7 +69,7 @@ public class ImoveisJDialog extends javax.swing.JDialog {
 
         //Add lista de usuários a combobox
         //TODO: Configurar o .toString do objeto Usuário
-        cmbCliente.addItem(new Cliente("Disponível", "", ""));
+        cmbCliente.addItem(new Cliente(0, "Disponível", "", ""));
         for (Cliente u : thisList) {
             cmbCliente.addItem(u);
         }
@@ -196,24 +198,35 @@ public class ImoveisJDialog extends javax.swing.JDialog {
         if (!this.txtDescription.getText().isEmpty() && !this.txtEndereco.getText().isEmpty()) {
             Cliente c = cmbCliente.getItemAt(cmbCliente.getSelectedIndex());
             Imovel thisImovel = new Imovel(0, this.txtDescription.getText(), this.txtEndereco.getText(), Timestamp.from(Instant.now()), chkFavorite.isSelected(), c);
-            System.out.println(imovel);
-
+            
             if (isEdit) {
                 //Envia mensagem pro banco
                 try {
                     Imovel selectedImovel = Main.em.find(Imovel.class, imovel.getId());
                     if (selectedImovel != null) {
-                        selectedImovel.setCliente(thisImovel.getCliente());
+                        if (thisImovel.getCliente().getId() != 0) {
+                            selectedImovel.setCliente(thisImovel.getCliente());
+                        } else {
+                            selectedImovel.setCliente(null);
+                        }
+                        selectedImovel.setEndereco(thisImovel.getEndereco());
                         selectedImovel.setDescription(thisImovel.getDescription());
                         selectedImovel.setFavorite(thisImovel.isFavorite());
                         selectedImovel.setLastChange(thisImovel.getLastChange());
                         Main.em.getTransaction().begin();
                         Main.em.merge(selectedImovel);
                         Main.em.getTransaction().commit();
-                        HomeJFrame.janelaImoveis.updateTable();
+                        if (HomeJFrame.janelaFavoritos != null) {
+                            HomeJFrame.janelaFavoritos.updateTable();
+                        }
+                        if (HomeJFrame.janelaImoveis != null) {
+                            HomeJFrame.janelaImoveis.updateTable();
+                        }
+                        
                     }
                     this.dispose();
                 } catch (Exception e) {
+                    System.out.println(e);
                     JOptionPane.showMessageDialog(this, "Houve ume erro ao editar o imóvel: " + imovel.toString());
                 };
 
@@ -235,10 +248,26 @@ public class ImoveisJDialog extends javax.swing.JDialog {
             } else {
                 //Envia mensagem pro banco
                 try {
+                    Imovel selectedImovel = new Imovel();
+                    if (c.getId() == 0) {
+                        selectedImovel.setCliente(null);
+                    } else {
+                        selectedImovel.setCliente(c);
+                    }
+                    
+                    selectedImovel.setDescription(this.txtDescription.getText());
+                    selectedImovel.setEndereco(this.txtEndereco.getText());
+                    selectedImovel.setFavorite(chkFavorite.isSelected());
+                    selectedImovel.setLastChange(Timestamp.from(Instant.now()));
                     Main.em.getTransaction().begin();
-                    Main.em.persist(thisImovel);
+                    Main.em.persist(selectedImovel);
                     Main.em.getTransaction().commit();
-                    HomeJFrame.janelaImoveis.updateTable();
+                    if (HomeJFrame.janelaFavoritos != null) {
+                        HomeJFrame.janelaFavoritos.updateTable();
+                    }
+                    if (HomeJFrame.janelaImoveis != null) {
+                        HomeJFrame.janelaImoveis.updateTable();
+                    }
                     this.dispose();
                 } catch (Exception e) {
                     System.out.println(e.toString());
@@ -260,7 +289,7 @@ public class ImoveisJDialog extends javax.swing.JDialog {
                     JOptionPane.showMessageDialog(this, "Houve ume erro ao notificar!");
                 }
             }
-
+            
         }
     }//GEN-LAST:event_btnSalvarActionPerformed
 
