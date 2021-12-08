@@ -8,9 +8,11 @@ package br.com.imobi.view;
 import br.com.imobi.app.Main;
 import br.com.imobi.app.Util;
 import br.com.imobi.model.Imovel;
+import br.com.imobi.report.ReportJDialog;
 import java.util.List;
 import javax.persistence.TypedQuery;
 import javax.swing.table.DefaultTableModel;
+import br.com.imobi.view.HomeJFrame;
 
 /**
  *
@@ -115,7 +117,7 @@ public class ImoveisJFrame extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
         );
 
         setBounds(0, 0, 903, 481);

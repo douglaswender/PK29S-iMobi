@@ -9,6 +9,7 @@ import br.com.imobi.app.Main;
 import br.com.imobi.app.Util;
 import br.com.imobi.model.Cliente;
 import br.com.imobi.model.Imovel;
+import br.com.imobi.report.ReportJDialog;
 import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -70,6 +71,7 @@ public class HomeJFrame extends javax.swing.JFrame {
         btnClientes = new javax.swing.JButton();
         btnAbrir = new javax.swing.JButton();
         lblUsuario = new javax.swing.JLabel();
+        btnGerarRelatorio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Home");
@@ -177,6 +179,13 @@ public class HomeJFrame extends javax.swing.JFrame {
         lblUsuario.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         lblUsuario.setText("jLabel3");
 
+        btnGerarRelatorio.setText("Relatório");
+        btnGerarRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGerarRelatorioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -195,7 +204,9 @@ public class HomeJFrame extends javax.swing.JFrame {
                         .addComponent(btnAbrir)
                         .addGap(355, 355, 355)
                         .addComponent(lblUsuario)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 528, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 447, Short.MAX_VALUE)
+                        .addComponent(btnGerarRelatorio)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnExcluir))
                     .addComponent(dskMain))
                 .addContainerGap())
@@ -208,7 +219,8 @@ public class HomeJFrame extends javax.swing.JFrame {
                     .addComponent(btnExcluir)
                     .addComponent(btnNovo)
                     .addComponent(btnAbrir)
-                    .addComponent(lblUsuario))
+                    .addComponent(lblUsuario)
+                    .addComponent(btnGerarRelatorio))
                 .addGap(27, 27, 27)
                 .addComponent(dskMain)
                 .addGap(20, 20, 20))
@@ -232,6 +244,7 @@ public class HomeJFrame extends javax.swing.JFrame {
             selectedIndex = 4;
             btnNovo.setEnabled(true);
             btnExcluir.setEnabled(true);
+            btnGerarRelatorio.setEnabled(false);
             
             if (janelaClientes == null) {
                 janelaClientes = new ClientesJFrame();
@@ -259,6 +272,7 @@ public class HomeJFrame extends javax.swing.JFrame {
             btnNovo.setEnabled(true);
             btnAbrir.setEnabled(false);
             btnExcluir.setEnabled(true);
+            btnGerarRelatorio.setEnabled(false);
             if (janelaMensagens == null) {
                 janelaMensagens = new MensagensJFrame();
                 dskMain.add(janelaMensagens);
@@ -282,17 +296,16 @@ public class HomeJFrame extends javax.swing.JFrame {
         Util.print("Excluir");
         switch (selectedIndex) {
             case 0:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                System.out.println("0");
                 break;
             case 1:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                System.out.println("1");
                 break;
             
             case 2:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                System.out.println("2");
                 break;
             case 3:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
                 Imovel u = Main.em.find(Imovel.class, selectedImovel.getId());
                 
                 if (u != null) {
@@ -335,6 +348,7 @@ public class HomeJFrame extends javax.swing.JFrame {
             btnNovo.setEnabled(false);
             btnAbrir.setEnabled(false);
             btnExcluir.setEnabled(true);
+            btnGerarRelatorio.setEnabled(false);
             if (janelaNotificacoes == null) {
                 janelaNotificacoes = new NotificacoesJFrame();
                 dskMain.add(janelaNotificacoes);
@@ -362,6 +376,7 @@ public class HomeJFrame extends javax.swing.JFrame {
             btnNovo.setEnabled(false);
             btnAbrir.setEnabled(true);
             btnExcluir.setEnabled(false);
+            btnGerarRelatorio.setEnabled(false);
             if (janelaFavoritos == null) {
                 janelaFavoritos = new FavoritosJFrame();
                 dskMain.add(janelaFavoritos);
@@ -385,6 +400,7 @@ public class HomeJFrame extends javax.swing.JFrame {
         if (selectedIndex != 3) {
             btnNovo.setEnabled(true);
             btnNovo.setEnabled(true);
+            btnGerarRelatorio.setEnabled(true);
             selectedIndex = 3;
             
             btnAbrir.setEnabled(true);
@@ -451,7 +467,7 @@ public class HomeJFrame extends javax.swing.JFrame {
         Util.print("Abrir");
         switch (selectedIndex) {
             case 0:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                System.out.println("0");
                 break;
             case 1:
                 MensagemJDialog mensagemDialog = new MensagemJDialog(this, rootPaneCheckingEnabled);
@@ -460,7 +476,10 @@ public class HomeJFrame extends javax.swing.JFrame {
                 break;
             
             case 2:
-                System.out.println("br.com.imobi.view.HomeJFrame.btnVoltarActionPerformed()");
+                System.out.println("2");
+                ImoveisJDialog favoritoDialog = new ImoveisJDialog(this, rootPaneCheckingEnabled, selectedImovel);
+                favoritoDialog.setLocationRelativeTo(null);
+                favoritoDialog.setVisible(true);
                 break;
             case 3:
                 ImoveisJDialog imoveisDialog = new ImoveisJDialog(this, rootPaneCheckingEnabled, selectedImovel);
@@ -478,6 +497,13 @@ public class HomeJFrame extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnAbrirActionPerformed
+
+    private void btnGerarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGerarRelatorioActionPerformed
+        // TODO add your handling code here:
+        ReportJDialog reportDialog = new ReportJDialog(this, true);
+        reportDialog.setLocationRelativeTo(null);
+        reportDialog.setVisible(true);
+    }//GEN-LAST:event_btnGerarRelatorioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -520,6 +546,7 @@ public class HomeJFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnClientes;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnFavoritos;
+    private javax.swing.JButton btnGerarRelatorio;
     private javax.swing.JButton btnImoveis;
     private javax.swing.JButton btnMensagens;
     private javax.swing.JButton btnNotificacoes;

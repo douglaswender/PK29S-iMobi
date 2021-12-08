@@ -6,6 +6,7 @@
 package br.com.imobi.view;
 
 import br.com.imobi.app.Main;
+import br.com.imobi.app.Util;
 import br.com.imobi.model.Imovel;
 import java.util.List;
 import javax.persistence.TypedQuery;
@@ -100,6 +101,11 @@ public class FavoritosJFrame extends javax.swing.JInternalFrame {
                 "Descrição", "Imóvel", "Data", "Hora"
             }
         ));
+        tblImoveis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblImoveisMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblImoveis);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -115,6 +121,20 @@ public class FavoritosJFrame extends javax.swing.JInternalFrame {
 
         setBounds(0, 0, 903, 481);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblImoveisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblImoveisMouseClicked
+        if (tblImoveis.getSelectedRow() != -1) {
+            String id = (String) dtm.getValueAt(tblImoveis.getSelectedRow(), 0);
+            Util.print(String.valueOf(id));
+
+            String jpql = "SELECT m FROM Imovel m WHERE m.id = :id";
+            TypedQuery<Imovel> query = Main.em.createQuery(jpql, Imovel.class);
+            query.setParameter("id", Integer.valueOf(id));
+            Imovel imovel = query.getSingleResult();
+            HomeJFrame.selectedImovel = imovel;
+            Util.print(HomeJFrame.selectedImovel.getDescription());
+        }
+    }//GEN-LAST:event_tblImoveisMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
